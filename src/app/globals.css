@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* 🌗 Helle + Dunkle Farbvarianten definieren */
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #f5f5f5;
+  }
+}
+
+/* 🌍 Globale Grundstruktur */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ✅ Toast-Animation */
+@keyframes toast-fade-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-animate {
+  animation: toast-fade-slide 0.4s ease-out;
+}
+
+/* 🗓️ FullCalendar Header */
+.fc .fc-toolbar-title {
+  color: #111111;
+  font-weight: 600;
+}
+
+/* 🗓️ Tagesnamen (Mo–So) sichtbar machen */
+.fc-col-header-cell-cushion {
+  color: #1f2937;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* 🗓️ Allgemeine Schriftfarbe im Kalender */
+.fc {
+  color: #1f2937;
+}
+
+/* 🕒 Hintergrund & Schriftfarbe der Zeitleiste links */
+.fc .fc-timegrid-slot-label {
+  background-color: #ffffff;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Light Mode */
+.light {
+  --background: #ffffff;
+  --foreground: #111111;
+}
+
+/* Dark Mode */
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f5f5f5;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Tippy Tooltip */
+.tippy-box[data-theme~='light'] {
+  background-color: white;
+  color: black;
+}
+
+.tippy-box[data-theme~='dark'] {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: white;
+}
+
+/* Tooltip-Theme: Light-Mode (dark text, helles Tooltip) */
+.tippy-box[data-theme~='custom'] {
+  background-color: #ffffff;
+  color: #111111;
+  border: 1px solid #ddd;
+}
+
+/* Tooltip-Theme: Dark-Mode (heller Text, dunkles Tooltip) */
+.dark .tippy-box[data-theme~='custom'] {
+  background-color: #1f2937; /* Tailwind: gray-800 */
+  color: #f9fafb; /* Tailwind: gray-50 */
+}
+
+/* Optional: kleine Details */
+.tippy-box[data-theme~='custom'] {
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
