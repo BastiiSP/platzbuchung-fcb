@@ -47,8 +47,8 @@ export default function HomePage() {
           <Image
             src="/logo.svg"
             alt="Vereinswappen"
-            width={120}
-            height={120}
+            width={300}
+            height={300}
             className="mb-6"
           />
           <h3 className="text-3xl mb-2">
