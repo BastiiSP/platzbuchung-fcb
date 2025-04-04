@@ -1,22 +1,24 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { getUserRolle } from "./getUserRolle";
+import { createClient } from "@/lib/supabaseClient";
 
-/**
- * Prüft, ob ein User eingeloggt ist und gibt User-ID & Rolle zurück.
- */
-export async function checkSession(
-  supabase: SupabaseClient
-): Promise<{ userId: string | null; rolle: string | null }> {
+export async function checkSession(supabase: ReturnType<typeof createClient>) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session?.user) {
-    return { userId: null, rolle: null };
-  }
+  const user = session?.user;
 
-  const userId = session.user.id;
-  const rolle = await getUserRolle(supabase, userId);
+  if (!user) return { userId: null, rolle: null, userEmail: null };
 
-  return { userId, rolle };
+  const { data: profile } = await supabase
+    .from("profile")
+    .select("rolle")
+    .eq("id", user.id)
+    .single();
+
+  return {
+    userId: user.id,
+    rolle: profile?.rolle || null,
+    userEmail: user.email ?? null,
+  };
 }
+

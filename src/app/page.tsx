@@ -7,12 +7,35 @@ import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { fetchNews, NewsItem } from "@/utils/fetchNews";
 import NewsSection from "@/components/NewsSection";
+import { checkSession } from "@/utils/checkSession";
+import { createClient } from "@/lib/supabaseClient";
+const supabase = createClient();
 
 export default function HomePage() {
   const [news, setNews] = useState<NewsItem[]>([]);
-
   useEffect(() => {
     fetchNews().then(setNews);
+  }, []);
+
+  useEffect(() => {
+    console.log("Geladene News:", news);
+  }, [news]);
+
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [rolle, setRolle] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { userId, rolle, userEmail } = await checkSession(supabase);
+      setUserId(userId);
+      setRolle(rolle);
+      setIsLoggedIn(!!userId);
+      setUserEmail(userEmail);
+    };
+
+    fetchSession();
   }, []);
 
   return (
@@ -26,16 +49,34 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-6">
             <nav className="hidden sm:flex gap-4 text-sm font-medium">
-              <Link href="/kalender" className="hover:underline">
+              {/* <Link href="/kalender" className="hover:underline">
                 📅 Kalender
               </Link>
               <Link href="/login" className="hover:underline">
                 🔐 Login
-              </Link>
-              {/* Platzhalter für spätere Seiten */}
-              {/* <Link href="/teams" className="hover:underline">👥 Teams</Link> */}
+              </Link> */}
+              {/* ✅ Login-Status */}
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                {isLoggedIn
+                  ? `✅ Eingeloggt als ${rolle}`
+                  : "❌ Nicht eingeloggt"}
+              </div>
             </nav>
+
             <ThemeToggle />
+
+            {userEmail ? (
+              <span className="text-xs text-gray-600 dark:text-gray-300">
+                👤 Eingeloggt als {userEmail}
+              </span>
+            ) : (
+              <Link
+                href="/login"
+                className="text-xs text-gray-500 dark:text-gray-400 hover:underline"
+              >
+                🔓 Nicht eingeloggt
+              </Link>
+            )}
           </div>
         </header>
 
@@ -71,33 +112,6 @@ export default function HomePage() {
           </div>
         </section>
         <NewsSection />
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold mb-6">📰 Vereins-News</h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {news.map((item: NewsItem) => (
-              <div
-                key={item.id}
-                className="border rounded-lg overflow-hidden shadow-sm bg-white dark:bg-neutral-800"
-              >
-                <img
-                  src={item.bild_url}
-                  alt={item.titel}
-                  className="w-full h-40 object-cover"
-                />
-                <div className="p-4">
-                  <span className="text-xs uppercase text-gray-500 dark:text-gray-400">
-                    {item.kategorie} ·{" "}
-                    {new Date(item.datum).toLocaleDateString()}
-                  </span>
-                  <h3 className="font-semibold text-lg mt-2">{item.titel}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                    {item.teaser}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
       </main>
       <Footer />
     </>

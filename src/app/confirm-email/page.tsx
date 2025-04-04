@@ -1,25 +1,29 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
+
 export default function ConfirmEmailPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-4 text-center">
-        <h1 className="text-2xl font-bold text-gray-800">
-          📬 Bestätige deine E-Mail-Adresse
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-white text-black dark:bg-neutral-900 dark:text-white">
+      <div className="bg-gray-100 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-lg p-8 max-w-md w-full text-center shadow-md">
+        <div className="flex justify-center mb-4">
+          <Image src="/logo.svg" alt="Vereinswappen" width={60} height={60} />
+        </div>
+        <h1 className="text-2xl font-bold mb-2">
+          ✅ Registrierung erfolgreich
         </h1>
-        <p className="text-gray-700">
-          Wir haben dir eine E-Mail geschickt. Bitte klicke auf den
-          Bestätigungslink, um dein Konto zu aktivieren.
+        <p className="mb-4 text-sm">
+          Bitte bestätige deine E-Mail-Adresse über den Link in deinem Postfach,
+          um dich einzuloggen.
         </p>
-        <p className="text-gray-500 text-sm">
-          Danach kannst du dich ganz normal einloggen.
-        </p>
-        <p className="text-blue-400 text-sm">
-          ℹ️ Du kannst diese Seite schließen, sobald die Bestätigungsmail bei
-          dir angekommen ist. Das kann bis zu 2 Minuten dauern - Habe etwas
-          Geduld!
-        </p>
+        <Link
+          href="/"
+          className="inline-block mt-4 px-5 py-2 border border-black dark:border-white rounded hover:bg-gray-200 dark:hover:bg-neutral-700 transition"
+        >
+          🔙 Zurück zur Startseite
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }

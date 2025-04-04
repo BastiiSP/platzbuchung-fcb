@@ -4,9 +4,10 @@ export type NewsItem = {
   id: number;
   titel: string;
   teaser: string;
+  inhalt: string;
   bild_url: string;
   kategorie: string;
-  datum: string;
+  created_at: string;
 };
 
 export async function fetchNews(): Promise<NewsItem[]> {
@@ -14,9 +15,9 @@ export async function fetchNews(): Promise<NewsItem[]> {
 
   const { data, error } = await supabase
     .from("news")
-    .select("id, titel, teaser, bild_url, kategorie, datum")
+    .select("id, titel, teaser, inhalt, bild_url, kategorie, created_at")
     .eq("veröffentlicht", true)
-    .order("datum", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(3);
 
   if (error) {
@@ -24,5 +25,6 @@ export async function fetchNews(): Promise<NewsItem[]> {
     return [];
   }
 
+  console.log("Geladene News:", data);
   return data as NewsItem[];
 }

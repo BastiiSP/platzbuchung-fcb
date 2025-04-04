@@ -37,7 +37,7 @@ export default function NewsSection() {
                 {item.teaser}
               </p>
               <time className="block text-xs text-gray-400">
-                📅 {new Date(item.datum).toLocaleDateString("de-DE")}
+                📅 {new Date(item.created_at).toLocaleDateString("de-DE")}
               </time>
             </div>
           </article>
