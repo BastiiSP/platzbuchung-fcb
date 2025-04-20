@@ -28,7 +28,9 @@ export default function Registrierungsseite() {
     if (error) {
       setFehler("❌ Registrierung fehlgeschlagen. Bitte versuche es erneut.");
     } else {
-      router.push("/confirm-email"); // ✅ Weiterleitung zur Bestätigungsseite
+      setErfolg(
+        "✅ Registrierung erfolgreich. Du erhältst in Kürze eine E-Mail mit einem Bestätigungslink."
+      );
     }
   };
 
