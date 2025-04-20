@@ -1,5 +1,3 @@
-// src/utils/getEventColor.ts
-
 export function getEventColor(platz: string): string {
   const platzKey = platz.toLowerCase();
 
