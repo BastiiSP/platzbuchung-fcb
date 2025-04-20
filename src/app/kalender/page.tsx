@@ -136,7 +136,7 @@ export default function KalenderSeite() {
         />
       )}
 
-      <main className="p-4">
+      <main className="p-4 w-full overflow-x-auto">
         <h1 className="text-2xl font-bold mb-4">📅 Platzbelegung</h1>
 
         {/* 🔒 Wenn nicht eingeloggt, Login-Hinweis */}

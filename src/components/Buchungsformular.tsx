@@ -154,29 +154,31 @@ export default function Buchungsformular({
           <div>
             <label className="block text-sm font-medium mb-1">Startzeit</label>
             <DatePicker
-              selected={startzeit}
+              selected={startzeit} // Der aktuell gewählte Startzeitpunkt
               onChange={(date) => {
                 if (date) {
-                  setStartzeit(date);
+                  setStartzeit(date); // ⏱️ Startzeit setzen
 
-                  // Endzeit erst setzen, wenn Uhrzeit bei Startzeit gesetzt ist
+                  // 🧠 Wenn die Startzeit auch eine Uhrzeit enthält (nicht nur Datum) UND noch keine Endzeit gesetzt ist:
                   const hours = date.getHours();
                   const minutes = date.getMinutes();
                   const hatUhrzeit = hours !== 0 || minutes !== 0;
-                  // Automatisches setzen der Endzeit auf den Wert der Startzeit
+
                   if (!endzeit && hatUhrzeit) {
+                    // Setze Endzeit auf denselben Zeitpunkt wie Startzeit (für späteren Vergleich)
                     const sameTime = new Date(date.getTime());
                     setEndzeit(sameTime);
                   }
                 }
               }}
-              locale="de"
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="dd.MM.yyyy HH:mm"
-              placeholderText="Startzeit wählen"
-              className="border border-gray-300 p-2 rounded text-black bg-white"
+              locale="de" // 🇩🇪 Deutschsprachiges Datumsformat
+              showTimeSelect // 🕓 Zeitwahl im Kalender aktivieren
+              timeFormat="HH:mm" // Zeit im 24-Stunden-Format anzeigen
+              timeIntervals={15} // ⏱️ 15-Minuten-Schritte
+              dateFormat="dd.MM.yyyy HH:mm" // 📅 Formatierung von Datum + Uhrzeit
+              placeholderText="Startzeit wählen" // Platzhaltertext im Eingabefeld
+              className="border border-gray-300 p-2 rounded text-black bg-white" // 💅 Styling
+              popperPlacement="bottom-start" // 🧭 Wichtig: Popup öffnet sich unten links, um abgeschnittene Darstellung zu vermeiden
             />
           </div>
 
