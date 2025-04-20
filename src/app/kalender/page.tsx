@@ -118,7 +118,7 @@ export default function KalenderSeite() {
 
   return (
     <>
-      <ThemeToggle />
+      {/* <ThemeToggle /> */}
 
       {/* ✅ Toast Meldungen */}
       {errorMessage && (
