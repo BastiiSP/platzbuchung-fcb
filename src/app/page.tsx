@@ -63,7 +63,7 @@ export default function HomePage() {
               </div>
             </nav>
 
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
 
             {userEmail ? (
               <span className="text-xs text-gray-600 dark:text-gray-300">

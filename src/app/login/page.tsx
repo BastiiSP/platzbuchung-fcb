@@ -40,7 +40,7 @@ export default function LoginPage() {
             1. FC 1911 Burgkunstadt
           </span>
         </div>
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </header>
 
       {/* 🧾 Login-Formular */}

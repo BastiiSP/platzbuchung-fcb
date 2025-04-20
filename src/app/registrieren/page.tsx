@@ -42,7 +42,7 @@ export default function Registrierungsseite() {
             1. FC 1911 Burgkunstadt
           </span>
         </div>
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </header>
 
       {/* 🧾 Registrierungsformular */}
