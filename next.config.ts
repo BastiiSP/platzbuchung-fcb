@@ -6,11 +6,21 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true, // verhindert Build-Abbruch durch Lint-Fehler
   },
   images: {
-    domains: [
-      "encrypted-tbn0.gstatic.com", // ← erlaubt Google Bilder
-      "img.olympics.com",
-      "contents.mediadecathlon.com",
-      // weitere Domains, die du verwendest
+    // 🧠 remotePatterns ersetzt das veraltete "domains"-Feld
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.olympics.com",
+      },
+      {
+        protocol: "https",
+        hostname: "contents.mediadecathlon.com",
+      },
+      // 👉 Füge hier weitere Bildquellen hinzu, wenn nötig
     ],
   },
 };
