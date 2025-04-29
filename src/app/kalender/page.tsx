@@ -59,7 +59,7 @@ export default function KalenderSeite() {
 
         const { data: profile } = await supabase
           .from("profile")
-          .select("rolle")
+          .select("rolle", { head: false }) // 🔧 Fehlervermeidung
           .eq("id", session.user.id)
           .single();
 

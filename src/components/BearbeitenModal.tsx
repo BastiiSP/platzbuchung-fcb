@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 
 export type Buchung = {
@@ -17,7 +19,7 @@ type Props = {
   show: boolean;
   onClose: () => void;
   supabase: any;
-  initialData: Buchung;
+  initialData: Buchung | null;
   onSave: () => void;
 };
 
@@ -28,18 +30,24 @@ export default function BearbeitenModal({
   initialData,
   onSave,
 }: Props) {
-  const [form, setForm] = useState(initialData);
+  // 📦 Lokaler Zustand für das Formular, wird erst gesetzt, wenn initialData vorhanden ist
+  const [form, setForm] = useState<Buchung | null>(initialData || null);
 
+  // 🔁 Wenn sich die übergebenen Props ändern, aktualisiere das Formular
   useEffect(() => {
-    setForm(initialData);
+    setForm(initialData || null);
   }, [initialData]);
 
+  // 🖊️ Formularfeldänderungen übernehmen
   const handleChange = (field: keyof Buchung, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    if (!form) return;
+    setForm((prev) => ({ ...prev!, [field]: value }));
   };
 
+  // 💾 Speichern der bearbeiteten Daten in Supabase
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form) return;
 
     const { error } = await supabase
       .from("buchungen")
@@ -64,13 +72,17 @@ export default function BearbeitenModal({
     }
   };
 
-  if (!show) return null;
+  // ⛔ Modal wird nur angezeigt, wenn es aktiv ist und gültige Daten geladen sind
+  if (!show || !form) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
       <div className="bg-white text-black dark:bg-neutral-800 dark:text-white p-6 rounded shadow-lg w-full max-w-xl">
         <h2 className="text-xl font-bold mb-4">✏️ Buchung bearbeiten</h2>
+
+        {/* 🧾 Bearbeitungsformular */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* 🏟️ Platzwahl, Platzanteil, Anlass */}
           <div className="flex gap-4 flex-wrap">
             <select
               value={form.platz}
@@ -103,6 +115,7 @@ export default function BearbeitenModal({
             </select>
           </div>
 
+          {/* 🕓 Start- und Endzeit */}
           <div className="flex gap-4 flex-wrap">
             <input
               type="datetime-local"
@@ -118,6 +131,7 @@ export default function BearbeitenModal({
             />
           </div>
 
+          {/* 👤 Name & Mannschaft */}
           <div className="flex gap-4 flex-wrap">
             <input
               type="text"
@@ -135,6 +149,7 @@ export default function BearbeitenModal({
             />
           </div>
 
+          {/* 📝 Optional: Bemerkung */}
           <textarea
             value={form.bemerkung || ""}
             onChange={(e) => handleChange("bemerkung", e.target.value)}
@@ -142,6 +157,7 @@ export default function BearbeitenModal({
             className="border p-2 rounded text-black w-full"
           />
 
+          {/* ✅ Aktionen */}
           <div className="flex justify-between">
             <button
               type="button"
