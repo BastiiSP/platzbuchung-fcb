@@ -5,6 +5,7 @@ import { de } from "date-fns/locale";
 import { getEventColor } from "@/utils/getEventColor";
 import { fetchEvents } from "@/utils/fetchEvents";
 
+// 🗓️ Registrierung der deutschen Sprache für das DatePicker-Modul
 registerLocale("de", de);
 
 type Props = {
@@ -22,6 +23,7 @@ export default function Buchungsformular({
   setSuccessMessage,
   setErrorMessage,
 }: Props) {
+  // 🧠 Formular-Zustände
   const [platz, setPlatz] = useState("hauptplatz");
   const [platzanteil, setPlatzanteil] = useState("ganz");
   const [anlass, setAnlass] = useState("training");
@@ -31,9 +33,11 @@ export default function Buchungsformular({
   const [buchendePerson, setBuchendePerson] = useState("");
   const [bemerkung, setBemerkung] = useState("");
 
+  // 📨 Formularübermittlung + Logik zur Platzbelegung
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // ❗ Validierung: Start- und Endzeit müssen vorhanden sein
     if (!startzeit || !endzeit) {
       setErrorMessage("❌ Bitte Start- und Endzeit auswählen.");
       return;
@@ -42,7 +46,7 @@ export default function Buchungsformular({
     const startISO = startzeit.toISOString();
     const endISO = endzeit.toISOString();
 
-    // 🧠 Abfrage vorhandener Buchungen für denselben Platz mit Überschneidung
+    // 🔄 Abfrage aller bestehenden Buchungen für diesen Platz im selben Zeitraum
     const { data: existing, error: fetchError } = await supabase
       .from("buchungen")
       .select("startzeit, endzeit, platzanteil")
@@ -55,13 +59,13 @@ export default function Buchungsformular({
       return;
     }
 
+    // 📊 Überschneidungsprüfung auf Basis von Platzanteilen
     const anteilWerte: Record<string, number> = {
       viertel: 0.25,
       halb: 0.5,
       ganz: 1,
     };
 
-    // 📏 Gesamtbelegung im Zeitfenster berechnen
     let belegung = 0;
     for (const buchung of existing || []) {
       const startB = new Date(buchung.startzeit).getTime();
@@ -80,7 +84,7 @@ export default function Buchungsformular({
       return;
     }
 
-    // ✅ Neue Buchung eintragen
+    // ✅ Speichern der neuen Buchung
     const { error: insertError } = await supabase.from("buchungen").insert({
       platz,
       platzanteil,
@@ -98,7 +102,7 @@ export default function Buchungsformular({
       return;
     }
 
-    // 🎉 Erfolg
+    // 🔄 Formular zurücksetzen + Erfolgsmeldung anzeigen
     setMannschaft("");
     setBuchendePerson("");
     setBemerkung("");
@@ -107,7 +111,7 @@ export default function Buchungsformular({
     setErrorMessage("");
     setSuccessMessage("✅ Die Buchung wurde erfolgreich gespeichert.");
 
-    // 🔁 Events neu laden für aktuelle Anzeige & Farben
+    // 🔁 Kalender-Einträge aktualisieren
     await fetchEvents(supabase, setEvents);
   };
 
@@ -115,12 +119,13 @@ export default function Buchungsformular({
     <>
       <h2 className="text-xl font-semibold mt-8 mb-2">➕ Neue Buchung</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* 📌 Platzwahl */}
         <div className="flex gap-4 flex-wrap">
           <select
             value={platz}
             onChange={(e) => setPlatz(e.target.value)}
             required
-            className="border border-gray-300 p-2 rounded text-black bg-white"
+            className="form-field bg-[var(--background)]"
           >
             <option value="hauptplatz">Hauptplatz</option>
             <option value="nebenplatz">Nebenplatz</option>
@@ -130,7 +135,7 @@ export default function Buchungsformular({
             value={platzanteil}
             onChange={(e) => setPlatzanteil(e.target.value)}
             required
-            className="border border-gray-300 p-2 rounded text-black bg-white"
+            className="form-field bg-[var(--background)]"
           >
             <option value="viertel">1/4 Platz</option>
             <option value="halb">1/2 Platz</option>
@@ -141,7 +146,7 @@ export default function Buchungsformular({
             value={anlass}
             onChange={(e) => setAnlass(e.target.value)}
             required
-            className="border border-gray-300 p-2 rounded text-black bg-white"
+            className="form-field bg-[var(--background)]"
           >
             <option value="training">Training</option>
             <option value="freundschaftsspiel">Freundschaftsspiel</option>
@@ -150,35 +155,33 @@ export default function Buchungsformular({
           </select>
         </div>
 
+        {/* ⏱️ Zeitangaben */}
         <div className="flex gap-4 flex-wrap">
           <div>
             <label className="block text-sm font-medium mb-1">Startzeit</label>
             <DatePicker
-              selected={startzeit} // Der aktuell gewählte Startzeitpunkt
+              selected={startzeit}
               onChange={(date) => {
                 if (date) {
-                  setStartzeit(date); // ⏱️ Startzeit setzen
-
-                  // 🧠 Wenn die Startzeit auch eine Uhrzeit enthält (nicht nur Datum) UND noch keine Endzeit gesetzt ist:
+                  setStartzeit(date);
                   const hours = date.getHours();
                   const minutes = date.getMinutes();
                   const hatUhrzeit = hours !== 0 || minutes !== 0;
 
                   if (!endzeit && hatUhrzeit) {
-                    // Setze Endzeit auf denselben Zeitpunkt wie Startzeit (für späteren Vergleich)
                     const sameTime = new Date(date.getTime());
                     setEndzeit(sameTime);
                   }
                 }
               }}
-              locale="de" // 🇩🇪 Deutschsprachiges Datumsformat
-              showTimeSelect // 🕓 Zeitwahl im Kalender aktivieren
-              timeFormat="HH:mm" // Zeit im 24-Stunden-Format anzeigen
-              timeIntervals={15} // ⏱️ 15-Minuten-Schritte
-              dateFormat="dd.MM.yyyy HH:mm" // 📅 Formatierung von Datum + Uhrzeit
-              placeholderText="Startzeit wählen" // Platzhaltertext im Eingabefeld
-              className="border border-gray-300 p-2 rounded text-black bg-white" // 💅 Styling
-              popperPlacement="bottom-start" // 🧭 Wichtig: Popup öffnet sich unten links, um abgeschnittene Darstellung zu vermeiden
+              locale="de"
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd.MM.yyyy HH:mm"
+              placeholderText="Startzeit wählen"
+              className="form-field bg-[var(--background)]"
+              popperPlacement="bottom-start"
             />
           </div>
 
@@ -193,11 +196,12 @@ export default function Buchungsformular({
               timeIntervals={15}
               dateFormat="dd.MM.yyyy HH:mm"
               placeholderText="Endzeit wählen"
-              className="border border-gray-300 p-2 rounded text-black bg-white"
+              className="form-field bg-[var(--background)]"
             />
           </div>
         </div>
 
+        {/* 👥 Person & Mannschaft */}
         <div className="flex gap-4 flex-wrap">
           <input
             type="text"
@@ -205,7 +209,7 @@ export default function Buchungsformular({
             onChange={(e) => setBuchendePerson(e.target.value)}
             placeholder="Name der buchenden Person"
             required
-            className="border border-gray-300 p-2 rounded text-black bg-white w-full md:w-auto"
+            className="form-field bg-[var(--background)] w-full md:w-auto"
           />
           <input
             type="text"
@@ -213,18 +217,20 @@ export default function Buchungsformular({
             onChange={(e) => setMannschaft(e.target.value)}
             placeholder="Mannschaftsname"
             required
-            className="border border-gray-300 p-2 rounded text-black bg-white w-full md:w-auto"
+            className="form-field bg-[var(--background)] w-full md:w-auto"
           />
         </div>
 
+        {/* 📝 Bemerkung */}
         <textarea
           value={bemerkung}
           onChange={(e) => setBemerkung(e.target.value)}
           placeholder="Weitere Informationen (optional)"
-          className="border border-gray-300 p-2 rounded text-black bg-white w-full"
+          className="form-field bg-[var(--background)] w-full"
           rows={3}
         />
 
+        {/* ✅ Absenden */}
         <button
           type="submit"
           className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded"

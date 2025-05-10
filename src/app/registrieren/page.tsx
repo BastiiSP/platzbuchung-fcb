@@ -119,8 +119,8 @@ export default function Registrierungsseite() {
     email && passwort.length >= 6 && passwort === passwortBestaetigung;
 
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-900 text-black dark:text-white flex flex-col items-center justify-center px-4">
-      <header className="absolute top-0 left-0 w-full flex items-center justify-between p-4 border-b border-gray-300 dark:border-neutral-700">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center justify-center px-4">
+      <header className="absolute top-0 left-0 w-full flex items-center justify-between p-4 border-b border-gray-300">
         <div className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Vereinslogo" width={32} height={32} />
           <span className="font-semibold text-sm sm:text-base">
@@ -129,7 +129,7 @@ export default function Registrierungsseite() {
         </div>
       </header>
 
-      <div className="w-full max-w-xl bg-gray-100 dark:bg-neutral-800 p-6 rounded shadow mt-20">
+      <div className="w-full max-w-xl bg-[#f9f9f9] p-6 rounded shadow mt-20">
         <h1 className="text-2xl font-bold text-center mb-4">📝 Registrieren</h1>
         <form onSubmit={handleRegistrierung} className="space-y-4">
           {/* Vorname / Nachname */}
@@ -139,14 +139,14 @@ export default function Registrierungsseite() {
               placeholder="Vorname"
               value={vorname}
               onChange={(e) => setVorname(e.target.value)}
-              className="flex-1 p-2 border rounded text-black"
+              className="flex-1 p-2 border rounded text-[var(--foreground)]"
             />
             <input
               type="text"
               placeholder="Nachname"
               value={nachname}
               onChange={(e) => setNachname(e.target.value)}
-              className="flex-1 p-2 border rounded text-black"
+              className="flex-1 p-2 border rounded text-[var(--foreground)]"
             />
           </div>
 
@@ -157,7 +157,7 @@ export default function Registrierungsseite() {
               placeholder="Telefonnummer"
               value={telefonnummer}
               onChange={(e) => setTelefonnummer(e.target.value)}
-              className="w-full p-2 border rounded text-black"
+              className="w-full p-2 border rounded text-[var(--foreground)]"
             />
             <p className="text-xs text-gray-500 mt-1">
               ℹ️ Wird benötigt, um dich bei kurzfristigen Änderungen zu
@@ -192,7 +192,7 @@ export default function Registrierungsseite() {
                 placeholder="z. B. Redaktion, Fan, Sponsor, Platzwart"
                 value={sonstigeMannschaft}
                 onChange={(e) => setSonstigeMannschaft(e.target.value)}
-                className="mt-2 w-full p-2 border rounded text-black"
+                className="mt-2 w-full p-2 border rounded text-[var(--foreground)]"
               />
             )}
           </div>
@@ -204,7 +204,7 @@ export default function Registrierungsseite() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="E-Mail-Adresse"
             required
-            className="w-full p-2 border rounded text-black"
+            className="w-full p-2 border rounded text-[var(--foreground)]"
           />
 
           {/* Passwortfeld mit Live-Feedback */}
@@ -214,7 +214,7 @@ export default function Registrierungsseite() {
             onChange={(e) => handlePasswortChange(e.target.value)}
             placeholder="Passwort"
             required
-            className="w-full p-2 border rounded text-black"
+            className="w-full p-2 border rounded text-[var(--foreground)]"
           />
 
           <div className="text-sm mt-2 space-y-1">
@@ -258,7 +258,7 @@ export default function Registrierungsseite() {
               onChange={(e) => setPasswortBestaetigung(e.target.value)}
               placeholder="Passwort bestätigen"
               required
-              className="w-full p-2 border rounded text-black pr-10"
+              className="w-full p-2 border rounded text-[var(--foreground)] pr-10"
             />
             {passwortBestaetigung && (
               <span className="absolute top-2 right-3">

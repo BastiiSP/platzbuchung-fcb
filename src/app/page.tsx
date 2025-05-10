@@ -40,9 +40,9 @@ export default function HomePage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white flex flex-col">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
         {/* 🔝 Obere Leiste */}
-        <header className="flex justify-between items-center px-6 py-4 border-b border-gray-300 dark:border-neutral-700">
+        <header className="flex justify-between items-center px-6 p-4 border-b border-gray-300">
           <div className="flex items-center gap-3">
             <Image src="/logo.svg" alt="Vereinswappen" width={40} height={40} />
             <h1 className="text-lg font-semibold">1. FC 1911 Burgkunstadt</h1>
@@ -56,7 +56,7 @@ export default function HomePage() {
                 🔐 Login
               </Link> */}
               {/* ✅ Login-Status */}
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-xs sm:text-sm text-[var(--foreground)]">
                 {isLoggedIn
                   ? `✅ Eingeloggt als ${rolle}`
                   : "❌ Nicht eingeloggt"}
@@ -66,13 +66,13 @@ export default function HomePage() {
             {/* <ThemeToggle /> */}
 
             {userEmail ? (
-              <span className="text-xs text-gray-600 dark:text-gray-300">
+              <span className="text-xs text-[var(--foreground)]">
                 👤 Eingeloggt als {userEmail}
               </span>
             ) : (
               <Link
                 href="/login"
-                className="text-xs text-gray-500 dark:text-gray-400 hover:underline"
+                className="text-xs text-[var(--foreground)] hover:underline"
               >
                 🔓 Nicht eingeloggt
               </Link>
@@ -99,13 +99,13 @@ export default function HomePage() {
           <div className="mt-8 space-x-4">
             <Link
               href="/kalender"
-              className="border border-black dark:border-white px-5 py-2 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+              className="border border-[var(--foreground)] px-5 py-2 rounded hover:bg-gray-100 transition"
             >
               📅 Zur Platzbuchung
             </Link>
             <Link
               href="/login"
-              className="border border-black dark:border-white px-5 py-2 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+              className="border border-[var(--foreground)] px-5 py-2 rounded hover:bg-gray-100 transition"
             >
               🔐 Login / Registrierung
             </Link>

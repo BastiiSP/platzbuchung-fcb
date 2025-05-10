@@ -77,7 +77,7 @@ export default function BearbeitenModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-      <div className="bg-white text-black dark:bg-neutral-800 dark:text-white p-6 rounded shadow-lg w-full max-w-xl">
+      <div className="bg-[var(--background)] text-[var(--foreground)] p-6 rounded shadow-lg w-full max-w-xl">
         <h2 className="text-xl font-bold mb-4">✏️ Buchung bearbeiten</h2>
 
         {/* 🧾 Bearbeitungsformular */}
@@ -87,7 +87,7 @@ export default function BearbeitenModal({
             <select
               value={form.platz}
               onChange={(e) => handleChange("platz", e.target.value)}
-              className="border p-2 rounded text-black"
+              className="border p-2 rounded text-[var(--foreground)]"
             >
               <option value="hauptplatz">Hauptplatz</option>
               <option value="nebenplatz">Nebenplatz</option>
@@ -96,7 +96,7 @@ export default function BearbeitenModal({
             <select
               value={form.platzanteil}
               onChange={(e) => handleChange("platzanteil", e.target.value)}
-              className="border p-2 rounded text-black"
+              className="border p-2 rounded text-[var(--foreground)]"
             >
               <option value="viertel">1/4 Platz</option>
               <option value="halb">1/2 Platz</option>
@@ -106,7 +106,7 @@ export default function BearbeitenModal({
             <select
               value={form.anlass}
               onChange={(e) => handleChange("anlass", e.target.value)}
-              className="border p-2 rounded text-black"
+              className="border p-2 rounded text-[var(--foreground)]"
             >
               <option value="training">Training</option>
               <option value="freundschaftsspiel">Freundschaftsspiel</option>
@@ -121,13 +121,13 @@ export default function BearbeitenModal({
               type="datetime-local"
               value={form.startzeit.slice(0, 16)}
               onChange={(e) => handleChange("startzeit", e.target.value)}
-              className="border p-2 rounded text-black"
+              className="border p-2 rounded text-[var(--foreground)]"
             />
             <input
               type="datetime-local"
               value={form.endzeit.slice(0, 16)}
               onChange={(e) => handleChange("endzeit", e.target.value)}
-              className="border p-2 rounded text-black"
+              className="border p-2 rounded text-[var(--foreground)]"
             />
           </div>
 
@@ -138,14 +138,14 @@ export default function BearbeitenModal({
               value={form.buchende_person}
               onChange={(e) => handleChange("buchende_person", e.target.value)}
               placeholder="Name"
-              className="border p-2 rounded text-black w-full md:w-auto"
+              className="form-field md:w-auto"
             />
             <input
               type="text"
               value={form.mannschaft}
               onChange={(e) => handleChange("mannschaft", e.target.value)}
               placeholder="Mannschaft"
-              className="border p-2 rounded text-black w-full md:w-auto"
+              className="form-field md:w-auto"
             />
           </div>
 
@@ -154,7 +154,7 @@ export default function BearbeitenModal({
             value={form.bemerkung || ""}
             onChange={(e) => handleChange("bemerkung", e.target.value)}
             placeholder="Weitere Infos (optional)"
-            className="border p-2 rounded text-black w-full"
+            className="form-field md:w-auto"
           />
 
           {/* ✅ Aktionen */}
@@ -168,7 +168,7 @@ export default function BearbeitenModal({
             </button>
             <button
               type="submit"
-              className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded"
+              className="bg-gray-300 hover:bg-gray-400 text-[var(--foreground)] px-4 py-2 rounded"
             >
               Speichern
             </button>

@@ -19,7 +19,7 @@ export default function NewsSection() {
         {news.map((item) => (
           <article
             key={item.id}
-            className="bg-white dark:bg-neutral-800 rounded-lg shadow hover:shadow-lg transition overflow-hidden border dark:border-neutral-700"
+            className="bg-[var(--background)] text-[var(--foreground)] border border-gray-200 rounded-lg shadow hover:shadow-lg transition overflow-hidden"
           >
             <Image
               src={item.bild_url || "/placeholder.jpg"}
@@ -29,11 +29,11 @@ export default function NewsSection() {
               className="w-full h-48 object-cover"
             />
             <div className="p-4 space-y-2">
-              <span className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400">
+              <span className="text-xs uppercase font-semibold text-gray-500">
                 {formatCapitalized(item.kategorie)}
               </span>
               <h3 className="text-lg font-bold">{item.titel}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-[var(--foreground)] opacity-80">
                 {item.teaser}
               </p>
               <time className="block text-xs text-gray-400">

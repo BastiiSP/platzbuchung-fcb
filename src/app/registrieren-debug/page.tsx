@@ -9,7 +9,7 @@ const supabase = createClient();
 function RegistrierenDebugDisabled() {
   return (
     <main className="min-h-screen flex items-center justify-center p-6">
-      <p className="text-gray-500 text-sm">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
         ⚠️ Diese Seite ist nur in der lokalen Entwicklungsumgebung verfügbar.
       </p>
     </main>
@@ -92,7 +92,7 @@ function RegistrierenDebugActive() {
   };
 
   return (
-    <main className="min-h-screen p-6 bg-white dark:bg-neutral-900 text-black dark:text-white">
+    <main className="min-h-screen p-6 bg-[var(--background)] dark:bg-neutral-900 text-[var(--foreground)] dark:text-white">
       <h1 className="text-xl font-bold mb-4">🧪 Debug Registrierung</h1>
 
       <form onSubmit={handleDebugRegistrierung} className="space-y-3 max-w-md">
@@ -102,7 +102,7 @@ function RegistrierenDebugActive() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
 
         <input
@@ -111,7 +111,7 @@ function RegistrierenDebugActive() {
           value={passwort}
           onChange={(e) => handlePasswortChange(e.target.value)}
           required
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
 
         <div className="text-sm mt-2 space-y-1">
@@ -152,35 +152,35 @@ function RegistrierenDebugActive() {
           placeholder="Vorname"
           value={vorname}
           onChange={(e) => setVorname(e.target.value)}
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
         <input
           type="text"
           placeholder="Nachname"
           value={nachname}
           onChange={(e) => setNachname(e.target.value)}
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
         <input
           type="text"
           placeholder="Telefonnummer"
           value={telefonnummer}
           onChange={(e) => setTelefonnummer(e.target.value)}
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
         <input
           type="text"
           placeholder='Mannschaften (z. B. ["Herren 1", "A1-Jugend"])'
           value={mannschaften}
           onChange={(e) => setMannschaften(e.target.value)}
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
         <input
           type="text"
           placeholder="Sonstige Mannschaft (optional)"
           value={sonstigeMannschaft}
           onChange={(e) => setSonstigeMannschaft(e.target.value)}
-          className="w-full p-2 border rounded text-black"
+          className="form-field"
         />
         <button
           type="submit"
