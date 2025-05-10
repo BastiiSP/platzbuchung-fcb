@@ -26,6 +26,35 @@ function RegistrierenDebugActive() {
   const [mannschaften, setMannschaften] = useState('["Herren 1"]');
   const [sonstigeMannschaft, setSonstigeMannschaft] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [passwortStarke, setPasswortStarke] = useState(0);
+  const [passwortFeedback, setPasswortFeedback] = useState({
+    hasLower: false,
+    hasUpper: false,
+    hasNumber: false,
+    hasSymbol: false,
+    hasMinLength: false,
+  });
+
+  const handlePasswortChange = (value: string) => {
+    setPasswort(value);
+
+    const feedback = {
+      hasLower: /[a-z]/.test(value),
+      hasUpper: /[A-Z]/.test(value),
+      hasNumber: /[0-9]/.test(value),
+      hasSymbol: /[^A-Za-z0-9]/.test(value),
+      hasMinLength: value.length >= 8,
+    };
+    setPasswortFeedback(feedback);
+
+    const score =
+      Number(feedback.hasLower) +
+      Number(feedback.hasUpper) +
+      Number(feedback.hasNumber) +
+      Number(feedback.hasSymbol) +
+      Number(feedback.hasMinLength);
+    setPasswortStarke(score);
+  };
 
   const handleDebugRegistrierung = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,18 +68,6 @@ function RegistrierenDebugActive() {
       setFeedback("❌ Ungültiges JSON im Mannschaften-Feld");
       return;
     }
-
-    console.log("📤 Debug-Registrierungsdaten:", {
-      email,
-      password: passwort,
-      data: {
-        vorname,
-        nachname,
-        telefonnummer,
-        mannschaften: parsedMannschaften,
-        sonstige_mannschaft: sonstigeMannschaft || null,
-      },
-    });
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -87,14 +104,49 @@ function RegistrierenDebugActive() {
           required
           className="w-full p-2 border rounded text-black"
         />
+
         <input
           type="password"
           placeholder="Passwort"
           value={passwort}
-          onChange={(e) => setPasswort(e.target.value)}
+          onChange={(e) => handlePasswortChange(e.target.value)}
           required
           className="w-full p-2 border rounded text-black"
         />
+
+        <div className="text-sm mt-2 space-y-1">
+          <div>{passwortFeedback.hasLower ? "✅" : "❌"} Kleinbuchstaben</div>
+          <div>{passwortFeedback.hasUpper ? "✅" : "❌"} Großbuchstaben</div>
+          <div>{passwortFeedback.hasNumber ? "✅" : "❌"} Zahl</div>
+          <div>{passwortFeedback.hasSymbol ? "✅" : "❌"} Sonderzeichen</div>
+          <div>
+            {passwortFeedback.hasMinLength ? "✅" : "❌"} Mind. 8 Zeichen
+          </div>
+        </div>
+
+        <div className="mt-2 h-2 w-full rounded bg-gray-300 overflow-hidden">
+          <div
+            className={`h-full transition-all duration-300 ${
+              passwortStarke <= 2
+                ? "bg-red-500 w-1/5"
+                : passwortStarke === 3
+                ? "bg-yellow-400 w-3/5"
+                : passwortStarke === 4
+                ? "bg-yellow-500 w-4/5"
+                : "bg-green-500 w-full"
+            }`}
+          />
+        </div>
+        <p className="text-xs mt-1">
+          {passwortStarke <= 2
+            ? "🔒 Sehr schwach"
+            : passwortStarke === 3
+            ? "🟡 Mittel"
+            : passwortStarke === 4
+            ? "🟠 Gut"
+            : "🟢 Sehr stark"}
+        </p>
+
         <input
           type="text"
           placeholder="Vorname"

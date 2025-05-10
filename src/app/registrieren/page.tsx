@@ -4,14 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabaseClient";
-import ThemeToggle from "@/components/ThemeToggle";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 export default function Registrierungsseite() {
   const supabase = createClient();
   const router = useRouter();
 
-  // 🧠 Formularzustände
   const [email, setEmail] = useState("");
   const [passwort, setPasswort] = useState("");
   const [passwortBestaetigung, setPasswortBestaetigung] = useState("");
@@ -24,6 +22,15 @@ export default function Registrierungsseite() {
   const [telefonnummer, setTelefonnummer] = useState("");
   const [mannschaften, setMannschaften] = useState<string[]>([]);
   const [sonstigeMannschaft, setSonstigeMannschaft] = useState("");
+
+  const [passwortStarke, setPasswortStarke] = useState(0);
+  const [passwortFeedback, setPasswortFeedback] = useState({
+    hasLower: false,
+    hasUpper: false,
+    hasNumber: false,
+    hasSymbol: false,
+    hasMinLength: false,
+  });
 
   const alleMannschaften = [
     "Herren 1",
@@ -48,12 +55,32 @@ export default function Registrierungsseite() {
     }
   };
 
+  const handlePasswortChange = (value: string) => {
+    setPasswort(value);
+
+    const feedback = {
+      hasLower: /[a-z]/.test(value),
+      hasUpper: /[A-Z]/.test(value),
+      hasNumber: /[0-9]/.test(value),
+      hasSymbol: /[^A-Za-z0-9]/.test(value),
+      hasMinLength: value.length >= 8,
+    };
+    setPasswortFeedback(feedback);
+
+    const score =
+      Number(feedback.hasLower) +
+      Number(feedback.hasUpper) +
+      Number(feedback.hasNumber) +
+      Number(feedback.hasSymbol) +
+      Number(feedback.hasMinLength);
+    setPasswortStarke(score);
+  };
+
   const handleRegistrierung = async (e: React.FormEvent) => {
     e.preventDefault();
     setFehler("");
     setErfolg("");
 
-    // Zusätzliche Sicherheitsprüfung für Pflichtfelder
     if (!vorname || !nachname || !telefonnummer) {
       setFehler("❌ Bitte alle Pflichtfelder ausfüllen.");
       return;
@@ -64,18 +91,6 @@ export default function Registrierungsseite() {
       return;
     }
 
-    console.log("🧪 Registrierungsdaten", {
-      email,
-      password: passwort,
-      data: {
-        vorname,
-        nachname,
-        telefonnummer,
-        mannschaften,
-        sonstige_mannschaft: sonstigeMannschaft || null,
-      },
-    });
-
     const { error } = await supabase.auth.signUp({
       email,
       password: passwort,
@@ -84,7 +99,7 @@ export default function Registrierungsseite() {
           vorname,
           nachname,
           telefonnummer,
-          mannschaften, //: JSON.stringify(mannschaften), // ✅ JSON-stringified!
+          mannschaften,
           sonstige_mannschaft: sonstigeMannschaft || null,
         },
       },
@@ -102,9 +117,6 @@ export default function Registrierungsseite() {
 
   const istFormularGueltig =
     email && passwort.length >= 6 && passwort === passwortBestaetigung;
-  // vorname &&
-  // nachname &&
-  // telefonnummer;
 
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-900 text-black dark:text-white flex flex-col items-center justify-center px-4">
@@ -115,19 +127,18 @@ export default function Registrierungsseite() {
             1. FC 1911 Burgkunstadt
           </span>
         </div>
-        {/* <ThemeToggle /> */}
       </header>
 
       <div className="w-full max-w-xl bg-gray-100 dark:bg-neutral-800 p-6 rounded shadow mt-20">
         <h1 className="text-2xl font-bold text-center mb-4">📝 Registrieren</h1>
         <form onSubmit={handleRegistrierung} className="space-y-4">
+          {/* Vorname / Nachname */}
           <div className="flex flex-wrap gap-4">
             <input
               type="text"
               placeholder="Vorname"
               value={vorname}
               onChange={(e) => setVorname(e.target.value)}
-              // required
               className="flex-1 p-2 border rounded text-black"
             />
             <input
@@ -135,11 +146,11 @@ export default function Registrierungsseite() {
               placeholder="Nachname"
               value={nachname}
               onChange={(e) => setNachname(e.target.value)}
-              // required
               className="flex-1 p-2 border rounded text-black"
             />
           </div>
 
+          {/* Telefonnummer */}
           <div>
             <input
               type="tel"
@@ -147,7 +158,6 @@ export default function Registrierungsseite() {
               value={telefonnummer}
               onChange={(e) => setTelefonnummer(e.target.value)}
               className="w-full p-2 border rounded text-black"
-              // required
             />
             <p className="text-xs text-gray-500 mt-1">
               ℹ️ Wird benötigt, um dich bei kurzfristigen Änderungen zu
@@ -155,6 +165,7 @@ export default function Registrierungsseite() {
             </p>
           </div>
 
+          {/* Mannschaftsauswahl */}
           <div>
             <label className="block font-medium mb-1">
               Mannschaftsauswahl (Mehrfachauswahl möglich)
@@ -186,6 +197,7 @@ export default function Registrierungsseite() {
             )}
           </div>
 
+          {/* E-Mail */}
           <input
             type="email"
             value={email}
@@ -195,15 +207,50 @@ export default function Registrierungsseite() {
             className="w-full p-2 border rounded text-black"
           />
 
+          {/* Passwortfeld mit Live-Feedback */}
           <input
             type={passwortAnzeigen ? "text" : "password"}
             value={passwort}
-            onChange={(e) => setPasswort(e.target.value)}
+            onChange={(e) => handlePasswortChange(e.target.value)}
             placeholder="Passwort"
             required
             className="w-full p-2 border rounded text-black"
           />
 
+          <div className="text-sm mt-2 space-y-1">
+            <div>{passwortFeedback.hasLower ? "✅" : "❌"} Kleinbuchstaben</div>
+            <div>{passwortFeedback.hasUpper ? "✅" : "❌"} Großbuchstaben</div>
+            <div>{passwortFeedback.hasNumber ? "✅" : "❌"} Zahl</div>
+            <div>{passwortFeedback.hasSymbol ? "✅" : "❌"} Sonderzeichen</div>
+            <div>
+              {passwortFeedback.hasMinLength ? "✅" : "❌"} Mind. 8 Zeichen
+            </div>
+          </div>
+
+          <div className="mt-2 h-2 w-full rounded bg-gray-300 overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${
+                passwortStarke <= 2
+                  ? "bg-red-500 w-1/5"
+                  : passwortStarke === 3
+                  ? "bg-yellow-400 w-3/5"
+                  : passwortStarke === 4
+                  ? "bg-yellow-500 w-4/5"
+                  : "bg-green-500 w-full"
+              }`}
+            />
+          </div>
+          <p className="text-xs mt-1">
+            {passwortStarke <= 2
+              ? "🔒 Sehr schwach"
+              : passwortStarke === 3
+              ? "🟡 Mittel"
+              : passwortStarke === 4
+              ? "🟠 Gut"
+              : "🟢 Sehr stark"}
+          </p>
+
+          {/* Passwort bestätigen */}
           <div className="relative">
             <input
               type={passwortAnzeigen ? "text" : "password"}
@@ -224,6 +271,7 @@ export default function Registrierungsseite() {
             )}
           </div>
 
+          {/* Passwort anzeigen */}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
