@@ -120,15 +120,6 @@ export default function Registrierungsseite() {
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center justify-center px-4">
-      <header className="absolute top-0 left-0 w-full flex items-center justify-between p-4 border-b border-gray-300">
-        <div className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="Vereinslogo" width={32} height={32} />
-          <span className="font-semibold text-sm sm:text-base">
-            1. FC 1911 Burgkunstadt
-          </span>
-        </div>
-      </header>
-
       <div className="w-full max-w-xl bg-[#f9f9f9] p-6 rounded shadow mt-20">
         <h1 className="text-2xl font-bold text-center mb-4">📝 Registrieren</h1>
         <form onSubmit={handleRegistrierung} className="space-y-4">

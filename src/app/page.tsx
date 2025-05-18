@@ -41,49 +41,11 @@ export default function HomePage() {
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
-        {/* 🔝 Obere Leiste */}
-        <header className="flex justify-between items-center px-6 p-4 border-b border-gray-300">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.svg" alt="Vereinswappen" width={40} height={40} />
-            <h1 className="text-lg font-semibold">1. FC 1911 Burgkunstadt</h1>
-          </div>
-          <div className="flex items-center gap-6">
-            <nav className="hidden sm:flex gap-4 text-sm font-medium">
-              {/* <Link href="/kalender" className="hover:underline">
-                📅 Kalender
-              </Link>
-              <Link href="/login" className="hover:underline">
-                🔐 Login
-              </Link> */}
-              {/* ✅ Login-Status */}
-              <div className="text-xs sm:text-sm text-[var(--foreground)]">
-                {isLoggedIn
-                  ? `✅ Eingeloggt als ${rolle}`
-                  : "❌ Nicht eingeloggt"}
-              </div>
-            </nav>
-
-            {/* <ThemeToggle /> */}
-
-            {userEmail ? (
-              <span className="text-xs text-[var(--foreground)]">
-                👤 Eingeloggt als {userEmail}
-              </span>
-            ) : (
-              <Link
-                href="/login"
-                className="text-xs text-[var(--foreground)] hover:underline"
-              >
-                🔓 Nicht eingeloggt
-              </Link>
-            )}
-          </div>
-        </header>
-
         {/* 🏠 Hauptinhalt */}
         <section className="flex flex-col items-center justify-center flex-1 text-center px-4">
           <h2 className="text-3xl font-bold mb-2">
-            Willkommen auf der offiziellen Homepage des 1. FC 1911 Burgkunstadt
+            Willkommen auf der Homepage des 1. FC 1911 Burgkunstadt
+            <p>Servus bei den Schuhstädtern!</p>
           </h2>
           <Image
             src="/logo.svg"
@@ -113,7 +75,6 @@ export default function HomePage() {
         </section>
         <NewsSection />
       </main>
-      <Footer />
     </>
   );
 }
