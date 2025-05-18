@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Menu } from "@headlessui/react";
@@ -20,68 +20,42 @@ export default function UserDropdown() {
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Session prüfen & auf Auth-Status reagieren
   useEffect(() => {
-    const getSessionAndListen = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+    const fetchUser = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const session = sessionData?.session;
 
       if (session?.user) {
-        const { data, error } = await supabase
+        console.log("👤 Session-User:", session.user);
+        const { data: profile, error } = await supabase
           .from("profile")
-          .select("vorname, nachname, avatar_url")
+          .select("*")
           .eq("id", session.user.id)
           .single();
 
-        if (!error) {
+        if (error) {
+          console.warn("⚠️ Fehler beim Laden des Profils:", error.message);
+        } else {
+          console.log("📦 Geladene Profildaten:", profile);
+
+          // 🛠️ Hier aktualisieren wir den State korrekt:
           setUser({
-            email: session.user.email ?? "",
-            vorname: data?.vorname ?? "",
-            nachname: data?.nachname ?? "",
-            avatar_url: data?.avatar_url ?? null,
+            email: profile.email ?? session.user.email ?? "",
+            vorname: profile.vorname ?? "",
+            nachname: profile.nachname ?? "",
+            avatar_url: null, // Wenn du später ein Feld hinzufügst, passe es hier an
           });
           setIsLoggedIn(true);
         }
       }
-
-      // Auth-Änderungen live mitverfolgen
-      const { data: listener } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          if (session?.user) {
-            const { data, error } = await supabase
-              .from("profile")
-              .select("vorname, nachname, avatar_url")
-              .eq("id", session.user.id)
-              .single();
-
-            if (!error) {
-              setUser({
-                email: session.user.email ?? "",
-                vorname: data?.vorname ?? "",
-                nachname: data?.nachname ?? "",
-                avatar_url: data?.avatar_url ?? null,
-              });
-              setIsLoggedIn(true);
-            }
-          } else {
-            setUser(null);
-            setIsLoggedIn(false);
-          }
-        }
-      );
-
-      return () => {
-        listener?.subscription.unsubscribe();
-      };
     };
 
-    getSessionAndListen();
+    fetchUser();
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/");
+    window.location.href = "/";
   };
 
   const getInitials = () => {
@@ -92,7 +66,6 @@ export default function UserDropdown() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      {/* Button im Header */}
       <Menu.Button className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--foreground)] text-[var(--background)] font-bold overflow-hidden">
         {isLoggedIn ? (
           user?.avatar_url ? (
@@ -102,22 +75,26 @@ export default function UserDropdown() {
               className="w-10 h-10 object-cover rounded-full"
             />
           ) : (
-            <span>{getInitials()}</span>
+            <span className="text-sm text-[var(--background)]">
+              {getInitials()}
+            </span>
           )
         ) : (
           <FiUser className="w-5 h-5" />
         )}
       </Menu.Button>
 
-      {/* Dropdown-Inhalt */}
       <Menu.Items className="absolute right-0 mt-2 w-52 origin-top-right rounded-md bg-[var(--background)] text-[var(--foreground)] shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none z-[9999] px-2 pb-2">
         {isLoggedIn ? (
           <>
-            <div className="px-2 pt-2 text-sm">
-              Eingeloggt als {user?.vorname ?? "Unbekannt"}
+            <div className="px-2 pt-2 text-sm mb-2">
+              👋 Hallo {user?.vorname?.trim() ? user.vorname : "Nutzer"}
+            </div>
+            <div className="px-2 text-sm mb-1">
+              E-Mail: {user?.email ?? "Unbekannt"}
             </div>
             <Menu.Item>
-              {({ active }: { active: boolean }) => (
+              {({ active }) => (
                 <button
                   onClick={handleLogout}
                   className={`mt-3 px-4 py-2 w-full font-bold text-sm text-center rounded border ${
@@ -133,7 +110,7 @@ export default function UserDropdown() {
           </>
         ) : (
           <Menu.Item>
-            {({ active }: { active: boolean }) => (
+            {({ active }) => (
               <button
                 onClick={() => router.push("/login")}
                 className={`mt-3 px-4 py-2 w-full font-bold text-sm text-center rounded border ${

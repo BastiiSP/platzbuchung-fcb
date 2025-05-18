@@ -38,6 +38,14 @@ export default function HomePage() {
     fetchSession();
   }, []);
 
+  useEffect(() => {
+    const testUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      console.log("🔍 Startseiten-User:", data?.user, error);
+    };
+    testUser();
+  }, []);
+
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">

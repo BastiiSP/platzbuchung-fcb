@@ -26,7 +26,7 @@ export default function LoginPage() {
     if (error) {
       setFehler("❌ Login fehlgeschlagen. Bitte überprüfe deine Daten.");
     } else {
-      router.push("/");
+      window.location.href = "/";
     }
   };
 
