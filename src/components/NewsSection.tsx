@@ -18,7 +18,7 @@ export default function NewsSection() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {news.map((item) => (
           <article
-            key={item.id}
+            key={item.id.toString()}
             className="bg-[var(--background)] text-[var(--foreground)] border border-gray-200 rounded-lg shadow hover:shadow-lg transition overflow-hidden"
           >
             <Image
@@ -26,16 +26,20 @@ export default function NewsSection() {
               alt={item.titel}
               width={600}
               height={400}
-              className="w-full h-48 object-cover"
+              className="w-full h-60 sm:h-64 object-cover"
             />
             <div className="p-4 space-y-2">
-              <span className="text-xs uppercase font-semibold text-gray-500">
+              <span className="text-[10px] uppercase font-semibold text-gray-500">
                 {formatCapitalized(item.kategorie)}
               </span>
-              <h3 className="text-lg font-bold">{item.titel}</h3>
-              <p className="text-sm text-[var(--foreground)] opacity-80">
+
+              <h3 className="text-sm font-semibold leading-tight line-clamp-2">
+                {item.titel}
+              </h3>
+              <p className="text-sm text-[var(--foreground)] opacity-80 line-clamp-4">
                 {item.teaser}
               </p>
+
               <time className="block text-xs text-gray-400">
                 📅 {new Date(item.created_at).toLocaleDateString("de-DE")}
               </time>

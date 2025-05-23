@@ -20,6 +20,27 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "contents.mediadecathlon.com",
       },
+      {
+        protocol: "https",
+        hostname: "scontent.cdninstagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "scontent-lga3-2.cdninstagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "scontent-frt3-1.cdninstagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "instagram.fcgk3-1.fna.fbcdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "instagram.fclo1-1.fna.fbcdn.net",
+      },
+
       // 👉 Füge hier weitere Bildquellen hinzu, wenn nötig
     ],
   },
