@@ -66,16 +66,16 @@ export default function HomePage() {
             Fußball. Charakter. Burgkunstadt.
             <p>Tradition seit 1911</p>
           </h3>
-          <div className="mt-8 space-x-4">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/kalender"
-              className="border border-[var(--foreground)] px-5 py-2 rounded hover:bg-gray-100 transition"
+              className="w-full sm:w-auto border border-[var(--foreground)] px-5 py-2 rounded text-center hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
             >
               📅 Zur Platzbuchung
             </Link>
             <Link
               href="/login"
-              className="border border-[var(--foreground)] px-5 py-2 rounded hover:bg-gray-100 transition"
+              className="w-full sm:w-auto border border-[var(--foreground)] px-5 py-2 rounded text-center hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
             >
               🔐 Login / Registrierung
             </Link>
