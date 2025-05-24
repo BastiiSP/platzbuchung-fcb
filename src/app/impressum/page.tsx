@@ -15,6 +15,14 @@ export default function ImpressumPage() {
         96224 Burgkunstadt
       </p>
 
+      <h2 className="text-2xl font-semibold mt-6 mb-2">
+        Eintragung im Vereinsregister
+      </h2>
+      <p>
+        Eingetragen im Vereinsregister beim Amtsgericht Coburg unter der Nummer
+        VR 20074
+      </p>
+
       <h2 className="text-2xl font-semibold mt-6 mb-2">Vertreten durch:</h2>
       <p>1. Vorsitzender: Wolfgang Strassgürtel</p>
 
