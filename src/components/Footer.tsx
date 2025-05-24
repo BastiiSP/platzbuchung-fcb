@@ -35,9 +35,21 @@ export default function Footer() {
       }`}
     >
       <div className="flex flex-col md:flex-row justify-between items-center gap-3 max-w-5xl mx-auto">
-        <div>
+        <div className="text-center md:text-left">
           © 2025
           <p>1. FC 1911 Burgkunstadt e. V.</p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link href="/impressum" className="hover:underline">
+            Impressum
+          </Link>
+          <span className="text-[var(--foreground)] text-lg font-bold leading-none">
+            ·
+          </span>
+          <Link href="/datenschutz" className="hover:underline">
+            Datenschutz
+          </Link>
         </div>
 
         <div className="flex gap-4 items-center">
