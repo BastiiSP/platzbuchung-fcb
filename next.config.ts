@@ -40,6 +40,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "instagram.fclo1-1.fna.fbcdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "instagram.fcgy1-1.fna.fbcdn.net",
+      }
 
       // 👉 Füge hier weitere Bildquellen hinzu, wenn nötig
     ],

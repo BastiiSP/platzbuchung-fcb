@@ -1,9 +1,39 @@
+"use client";
+
 import Link from "next/link";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 
 export default function Footer() {
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <footer className="w-full border-t border-gray-300 px-6 py-4 mt-6 bg-[var(--background)] text-[var(--foreground)] text-sm text-left">
+    <footer
+      ref={footerRef}
+      className={`w-full border-t border-gray-300 px-6 py-4 mt-6 bg-neutral-100 dark:bg-neutral-800 text-[var(--foreground)] text-sm text-left shadow-inner fade-in-up ${
+        visible ? "fade-in-up-visible" : ""
+      }`}
+    >
       <div className="flex flex-col md:flex-row justify-between items-center gap-3 max-w-5xl mx-auto">
         <div>
           © 2025
@@ -20,7 +50,6 @@ export default function Footer() {
           >
             <FaFacebook size={25} />
           </Link>
-
           <Link
             href="https://www.instagram.com/schuhstaedter1911"
             target="_blank"
