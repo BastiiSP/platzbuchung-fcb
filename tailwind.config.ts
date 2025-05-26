@@ -11,7 +11,6 @@ const config: Config = {
   darkMode: "class", // wichtig: Umschaltung per .dark-Klasse möglich
   plugins: [
     forms,
-    require("@tailwindcss/line-clamp"),
   ],
 };
 

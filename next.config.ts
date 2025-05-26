@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true, // verhindert Build-Abbruch durch Lint-Fehler
   },
   images: {
-    // 🧠 remotePatterns ersetzt das veraltete "domains"-Feld
     remotePatterns: [
+      // Bestehende erlaubte Bildquellen
       {
         protocol: "https",
         hostname: "encrypted-tbn0.gstatic.com",
@@ -20,32 +20,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "contents.mediadecathlon.com",
       },
-      {
-        protocol: "https",
-        hostname: "scontent.cdninstagram.com",
-      },
-      {
-        protocol: "https",
-        hostname: "scontent-lga3-2.cdninstagram.com",
-      },
-      {
-        protocol: "https",
-        hostname: "scontent-frt3-1.cdninstagram.com",
-      },
-      {
-        protocol: "https",
-        hostname: "instagram.fcgk3-1.fna.fbcdn.net",
-      },
-      {
-        protocol: "https",
-        hostname: "instagram.fclo1-1.fna.fbcdn.net",
-      },
-      {
-        protocol: "https",
-        hostname: "instagram.fcgy1-1.fna.fbcdn.net",
-      }
 
-      // 👉 Füge hier weitere Bildquellen hinzu, wenn nötig
+      // ✅ Dynamische Instagram-Quellen (alle Subdomains via Wildcards)
+      {
+        protocol: "https",
+        hostname: "**.cdninstagram.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.fna.fbcdn.net",
+        pathname: "/**",
+      }
     ],
   },
 };

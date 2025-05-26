@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { formatCapitalized } from "@/utils/formatCapitalized";
 import { NewsItem } from "@/utils/fetchNews";
 
@@ -40,34 +39,44 @@ export default function NewsCard({ item, index }: NewsCardProps) {
 
   if (!isClient) return null;
 
+  console.log("🧪 Link zur News:", item.link);
+
   return (
-    <article
-      ref={ref}
-      className={`bg-[var(--background)] text-[var(--foreground)] border border-gray-200 rounded-lg shadow hover:shadow-lg transition overflow-hidden fade-in-up ${
-        visible ? `fade-in-up-visible fade-delay-${Math.min(index, 5)}` : ""
-      }`}
+    <a
+      href={item.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block hover:no-underline"
     >
-      <Image
-        src={item.bild_url || "/placeholder.jpg"}
-        alt={item.titel}
-        width={600}
-        height={400}
-        className="w-full h-60 sm:h-64 object-cover"
-      />
-      <div className="p-4 space-y-2">
-        <span className="text-[10px] uppercase font-semibold text-gray-500">
-          {formatCapitalized(item.kategorie)}
-        </span>
-        <h3 className="text-sm font-semibold leading-tight line-clamp-2">
-          {item.titel}
-        </h3>
-        <p className="text-sm text-[var(--foreground)] opacity-80 line-clamp-4">
-          {item.teaser}
-        </p>
-        <time className="block text-xs text-gray-400">
-          📅 {new Date(item.created_at).toLocaleDateString("de-DE")}
-        </time>
-      </div>
-    </article>
+      <article
+        ref={ref}
+        className={`bg-[var(--background)] text-[var(--foreground)] border border-gray-200 rounded-lg shadow hover:shadow-lg transition-transform duration-300 transform hover:scale-105 overflow-hidden fade-in-up ${
+          visible ? `fade-in-up-visible fade-delay-${Math.min(index, 5)}` : ""
+        }`}
+      >
+        {item.bild_url?.startsWith("http") && (
+          <img
+            src={`/api/image-proxy?url=${encodeURIComponent(item.bild_url)}`}
+            alt={item.titel}
+            className="w-full h-60 sm:h-64 object-cover"
+            loading="lazy"
+          />
+        )}
+        <div className="p-4 space-y-2">
+          <span className="text-[10px] uppercase font-semibold text-gray-500">
+            {formatCapitalized(item.kategorie)}
+          </span>
+          <h3 className="text-sm font-semibold leading-tight line-clamp-2">
+            {item.titel}
+          </h3>
+          <p className="text-sm text-[var(--foreground)] opacity-80 line-clamp-4">
+            {item.teaser}
+          </p>
+          <time className="block text-xs text-gray-400">
+            📅 {new Date(item.created_at).toLocaleDateString("de-DE")}
+          </time>
+        </div>
+      </article>
+    </a>
   );
 }

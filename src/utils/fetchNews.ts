@@ -10,6 +10,7 @@ export type NewsItem = {
   bild_url: string;
   kategorie: string;
   created_at: string;
+  link: string;
 };
 
 // Bild aus <description> extrahieren (z. B. <img src="...">)
@@ -34,7 +35,8 @@ async function fetchSupabaseNews(): Promise<NewsItem[]> {
     return [];
   }
 
-  return data as NewsItem[];
+  // 🟡 Supabase liefert keinen link → wir setzen ihn leer
+  return (data as NewsItem[]).map((item) => ({ ...item, link: "" }));
 }
 
 // Instagram-News aus RSS (rss.app)
@@ -61,6 +63,7 @@ async function fetchInstagramNews(): Promise<NewsItem[]> {
         "/placeholder.jpg",
       kategorie: "Instagram",
       created_at: item.pubDate || new Date().toISOString(),
+      link: item.link || "", // ✅ Link aus dem Feed übernehmen
     }));
   } catch (error) {
     console.error("❌ Fehler beim Laden des Instagram-Feeds:", error);
