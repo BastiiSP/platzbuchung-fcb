@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.49.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tippyjs/react": "^4.2.6",
+    "@vercel/speed-insights": "^1.2.0",
     "date-fns": "^4.1.0",
     "fast-xml-parser": "^5.2.3",
     "next": "15.2.3",
