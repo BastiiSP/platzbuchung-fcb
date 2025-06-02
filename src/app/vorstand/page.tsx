@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabaseClient";
 import { checkSession } from "@/utils/checkSession";
+import BenutzerListe from "@/components/BenutzerListe";
 
 export default function VorstandPage() {
   const supabase = createClient();
@@ -95,7 +96,7 @@ export default function VorstandPage() {
       {/* Inhalte */}
       {activeTab === "benutzer" && (
         <section>
-          <p className="text-lg mb-2">Benutzerverwaltung folgt …</p>
+          <BenutzerListe />
         </section>
       )}
 

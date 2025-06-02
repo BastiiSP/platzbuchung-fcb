@@ -13,11 +13,23 @@ export type NewsItem = {
   link: string;
 };
 
-// Bild aus <description> extrahieren (z. B. <img src="...">)
+// Bild aus <description> extrahieren – robust & serverseitig
 function extractImageFromDescription(description: string): string | null {
-  const match = description.match(/<img[^>]+src="([^">]+)"/);
-  return match?.[1] || null;
+  if (!description) return null;
+
+  const matches = Array.from(description.matchAll(/<img[^>]+src=["']([^"']+)["']/gi));
+
+  for (const match of matches) {
+    const url = match[1];
+    if (url && url.includes("cdninstagram")) {
+      return url; // ✅ Priorisiere funktionierende CDN-Links
+    }
+  }
+
+  // Wenn kein CDN-Link, nimm notfalls das erste Bild überhaupt
+  return matches[0]?.[1] || null;
 }
+
 
 // Supabase-News laden
 async function fetchSupabaseNews(): Promise<NewsItem[]> {
@@ -35,36 +47,39 @@ async function fetchSupabaseNews(): Promise<NewsItem[]> {
     return [];
   }
 
-  // 🟡 Supabase liefert keinen link → wir setzen ihn leer
   return (data as NewsItem[]).map((item) => ({ ...item, link: "" }));
 }
 
-// Instagram-News aus RSS (rss.app)
+// Instagram-News aus RSS
 async function fetchInstagramNews(): Promise<NewsItem[]> {
   try {
-    const res = await fetch("https://rss.app/feeds/qpbzqu7KkjNGT2rU.xml");
-    const xml = await res.text();
+    const res = await fetch("/api/instagram-feed");
+    const { xml } = await res.json();
 
-    const parser = new XMLParser();
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: "@_",
+      processEntities: true,
+    });
+
     const parsed = parser.parse(xml);
-
     const items = parsed.rss?.channel?.item || [];
 
-    return items.slice(0, 3).map((item: any, index: number) => ({
-      id: `ig-${index}`,
-      titel: item.title || "Instagram-Beitrag",
-      teaser:
-        (item.description?.replace(/<[^>]+>/g, "").slice(0, 150) + "…") ||
-        "Neuer Beitrag auf Instagram.",
-      bild_url:
-        item.enclosure?.["@_url"] ||
-        item["media:content"]?.["@_url"] ||
-        extractImageFromDescription(item.description || "") ||
-        "/placeholder.jpg",
-      kategorie: "Instagram",
-      created_at: item.pubDate || new Date().toISOString(),
-      link: item.link || "", // ✅ Link aus dem Feed übernehmen
-    }));
+    return items.slice(0, 3).map((item: any, index: number) => {
+      const imageUrl = extractImageFromDescription(item.description || "")?.trim() || "";
+
+      return {
+        id: `ig-${index}`,
+        titel: item.title || "Instagram-Beitrag",
+        teaser:
+          (item.description?.replace(/<[^>]+>/g, "").slice(0, 150) + "…") ||
+          "Neuer Beitrag auf Instagram.",
+        bild_url: imageUrl,
+        kategorie: "Instagram",
+        created_at: item.pubDate || new Date().toISOString(),
+        link: item.link || "",
+      };
+    });
   } catch (error) {
     console.error("❌ Fehler beim Laden des Instagram-Feeds:", error);
     return [];

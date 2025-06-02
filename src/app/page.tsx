@@ -2,25 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import ThemeToggle from "@/components/ThemeToggle";
-import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
-import { fetchNews, NewsItem } from "@/utils/fetchNews";
-import NewsSection from "@/components/NewsSection";
 import { checkSession } from "@/utils/checkSession";
 import { createClient } from "@/lib/supabaseClient";
+
 const supabase = createClient();
 
 export default function HomePage() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  useEffect(() => {
-    fetchNews().then(setNews);
-  }, []);
-
-  useEffect(() => {
-    console.log("Geladene News:", news);
-  }, [news]);
-
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [rolle, setRolle] = useState<string | null>(null);
@@ -34,23 +22,25 @@ export default function HomePage() {
       setIsLoggedIn(!!userId);
       setUserEmail(userEmail);
     };
-
     fetchSession();
   }, []);
 
+  // 📌 Script für LightWidget einbinden
   useEffect(() => {
-    const testUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      console.log("🔍 Startseiten-User:", data?.user, error);
+    const script = document.createElement("script");
+    script.src = "https://cdn.lightwidget.com/widgets/lightwidget.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
     };
-    testUser();
   }, []);
 
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
         {/* 🏠 Hauptinhalt */}
-        <section className="flex flex-col items-center justify-center flex-1 text-center px-4">
+        <section className="flex flex-col items-center justify-center flex-1 text-center px-4 mb-4">
           <h2 className="text-3xl font-bold mb-2">
             Willkommen auf der Homepage des 1. FC 1911 Burgkunstadt
             <p>Servus bei den Schuhstädtern!</p>
@@ -81,7 +71,27 @@ export default function HomePage() {
             </Link>
           </div>
         </section>
-        <NewsSection />
+
+        {/* 📰 Vereins-News im NewsCard-Stil */}
+        <section className="px-4 py-10 text-center">
+          <h2 className="text-2xl font-bold mb-4">📰 Vereins-News</h2>
+          <div className="w-full max-w-4xl mx-auto bg-white dark:bg-neutral-800 shadow-md rounded-lg p-4">
+            <iframe
+              src="https://cdn.lightwidget.com/widgets/e0ddd3f07e445ffcadd888b4c0f4c053.html"
+              scrolling="no"
+              allowTransparency={true}
+              className="lightwidget-widget w-full"
+              style={{
+                border: 0,
+                overflow: "hidden",
+                minHeight: "400px",
+              }}
+            ></iframe>
+          </div>
+        </section>
+
+        {/* ⛔️ Vereins-News via Supabase (vorerst deaktiviert) */}
+        {/* <NewsSection /> */}
       </main>
     </>
   );

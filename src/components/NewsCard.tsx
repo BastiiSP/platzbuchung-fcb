@@ -39,8 +39,6 @@ export default function NewsCard({ item, index }: NewsCardProps) {
 
   if (!isClient) return null;
 
-  console.log("🧪 Link zur News:", item.link);
-
   return (
     <a
       href={item.link}

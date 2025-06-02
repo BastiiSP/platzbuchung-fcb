@@ -26,27 +26,20 @@ export default function UserDropdown() {
       const session = sessionData?.session;
 
       if (session?.user) {
-        console.log("👤 Session-User:", session.user);
-        const { data: profile, error } = await supabase
+        const { data: profile } = await supabase
           .from("profile")
           .select("*")
           .eq("id", session.user.id)
           .single();
 
-        if (error) {
-          console.warn("⚠️ Fehler beim Laden des Profils:", error.message);
-        } else {
-          console.log("📦 Geladene Profildaten:", profile);
-
-          // 🛠️ Hier aktualisieren wir den State korrekt:
-          setUser({
-            email: profile.email ?? session.user.email ?? "",
-            vorname: profile.vorname ?? "",
-            nachname: profile.nachname ?? "",
-            avatar_url: null, // Wenn du später ein Feld hinzufügst, passe es hier an
-          });
-          setIsLoggedIn(true);
-        }
+        // Profilinformationen setzen
+        setUser({
+          email: profile?.email ?? session.user.email ?? "",
+          vorname: profile?.vorname ?? "",
+          nachname: profile?.nachname ?? "",
+          avatar_url: null,
+        });
+        setIsLoggedIn(true);
       }
     };
 
