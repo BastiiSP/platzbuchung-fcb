@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
 
-// ✅ Konfiguration für Next.js – ESLint wird beim Build ignoriert
+// ✅ Konfiguration für Next.js 16
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true, // verhindert Build-Abbruch durch Lint-Fehler
-  },
   images: {
     remotePatterns: [
       // Bestehende erlaubte Bildquellen
