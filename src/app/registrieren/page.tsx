@@ -95,6 +95,7 @@ export default function Registrierungsseite() {
       email,
       password: passwort,
       options: {
+        emailRedirectTo: "https://www.fcbuku.de/confirm-email",
         data: {
           vorname,
           nachname,
